@@ -25,8 +25,20 @@ function loadEmployees(){
             name: "choice",
             type:"list",
             message:"What would you like to do?",
+            choices: ["Add departments, roles, employees", "View departments, roles, employees", "Update employee roles", "Quit"]
+        }, 
+        {
+            name: "choice",
+            type:"list",
+            message:"What would you like to do?",
             choices: ["View Employees", "Quit"]
-        }
+        },
+        {
+            name: "choice",
+            type:"list",
+            message:"What would you like to do?",
+            choices: ["View Employees", "Quit"]
+        },
     ]).then(answers =>{
         if(answers.choice==="View Employees"){
             viewAllEmployees();
