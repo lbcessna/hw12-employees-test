@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+require("console.table");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -15,40 +16,47 @@ const connection = mysql.createConnection({
 });
 
 connection.connect(err => {
-    if(err) throw err;
-    loadEmployees();
+    if (err) throw err;
+    mainMenu();
 });
 
-function loadEmployees(){
+const addDeptRoleEmpData = () => {
+    console.log("You selected the addDeptRoleEmpData function");
+}
+const viewDeptRoleEmpData = () => {
+    console.log("You selected the viewDeptRoleEmpData function");
+}
+const updateRoles = () => {
+    console.log("You selected the updateRoles function");
+}
+const mainMenu = () => {
     inquirer.prompt([
         {
-            name: "choice",
-            type:"list",
-            message:"What would you like to do?",
+            name: "menuChoice",
+            type: "list",
+            message: "What would you like to do?",
             choices: ["Add departments, roles, employees", "View departments, roles, employees", "Update employee roles", "Quit"]
-        }, 
-        {
-            name: "choice",
-            type:"list",
-            message:"What would you like to do?",
-            choices: ["View Employees", "Quit"]
-        },
-        {
-            name: "choice",
-            type:"list",
-            message:"What would you like to do?",
-            choices: ["View Employees", "Quit"]
-        },
-    ]).then(answers =>{
-        if(answers.choice==="View Employees"){
-            viewAllEmployees();
-        }else {
-            console.log("bu-bye");
-            connection.end();
-        }
-    })
+        }]).then(({ menuChoice }) => {
+            switch (menuChoice) {
+                case "Add departments, roles, employees":
+                    addDeptRoleEmpData()
+                    break;
+                case "View departments, roles, employees":
+                    viewDeptRoleEmpData();
+                    break;
+                case "Update employee roles":
+                    updateRoles();
+                    break
+                case "Quit":
+                    console.log("Bu-bye");
+                    connection.end()
+                    break;
+                default:
+                    break;
+            }
+        })
 }
 
-function viewAllEmployees(){
+function viewAllEmployees() {
     console.log("Look at all these employees!");
 }
