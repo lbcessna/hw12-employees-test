@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+const { getTable } = require("console.table");
 require("console.table");
 
 const connection = mysql.createConnection({
@@ -24,8 +25,9 @@ const addDeptRoleEmpData = () => {
     console.log("You selected the addDeptRoleEmpData function");
 }
 const viewDeptRoleEmpData = () => {
-    console.log("You selected the viewDeptRoleEmpData function");
+    connection.query("SELECT first_name, last_name, title, salary FROM employee INNER JOIN role USING (id)", (err, results) => console.table(results))
 }
+
 const updateRoles = () => {
     console.log("You selected the updateRoles function");
 }
@@ -52,6 +54,7 @@ const mainMenu = () => {
                     connection.end()
                     break;
                 default:
+                    mainMenu();
                     break;
             }
         })
