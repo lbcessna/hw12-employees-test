@@ -68,29 +68,47 @@ const addDepartment = () => {
         })
 }
 const addRole = () => {
-    inquirer.prompt([
-        {
-            name: "title",
-            type: "text",
-            message: "What is the new title?",
-        },
-    {
-        name: "salary",
-        type: "number",
-        message: "What is the salary for this title?",
-    }]).then(({ title, salary }) => {
-            connection.query("INSERT INTO role SET ?", {
-                title: title,
-                salary: salary
-            }, (err, results) => {
-                if (err) throw err
-                console.log("******************");
-                console.log("New Role Added!");
-                console.log("******************");
-                setTimeout(mainMenu, 5000)
+    connection.query("SELECT * FROM department", (err, results) => {
+        if (err) throw err
+        inquirer.prompt([
+            {
+                name: "title",
+                type: "text",
+                message: "Please enter the new title?",
+            },
+            {
+                type: "rawlist",
+                name: "name",
+                message: "Please select their department?",
+                choices: function () {
+                    const choicesArray = [];
+                    for (let i = 0; i < results.length; i++) {
+                        choicesArray.push(results[i].name)
+                    }
+                    return choicesArray
+                }
+            },
+            {
+                name: "salary",
+                type: "number",
+                message: "What is the salary for this title?"
+            }]).then(({ title, salary }) => {
+                const [foundDept] = results.filter(name => name.name)
+                connection.query("INSERT INTO role SET ?", {
+                    department_id: foundDept.id,
+                    title: title,
+                    salary: salary,
+                }, (err, results) => {
+                    if (err) throw err
+                    console.log("******************");
+                    console.log("New Role Added!");
+                    console.log("******************");
+                    setTimeout(mainMenu, 5000)
+                })
             })
-        })
-}
+
+    })
+};
 const viewDeptRoleEmpData = () => {
     connection.query("SELECT first_name, last_name, title, salary FROM employee INNER JOIN role USING (id)", (err, results) => console.table(results))
 }
