@@ -166,29 +166,45 @@ const addEmployee = () => {
     })
 };
 const viewDeptRoleEmpData = () => {
-    connection.query("SELECT first_name, last_name, title, salary FROM employee INNER JOIN role USING (id)", (err, results) => console.table(results))
+    // connection.query("SELECT first_name, last_name, title, salary FROM employee INNER JOIN role USING (id)", (err, results) => console.table(results))
     inquirer.prompt([
         {
             name: "viewChoice",
             type: "list",
             message: "What list would you like to view?",
             choices: ["View department", "View roles", "View employees"]
-        }]).then(({ addChoice }) => {
-            switch (addChoice) {
+        }]).then(({ viewChoice }) => {
+            switch (viewChoice) {
                 case "View department":
                     viewDepartment();
                     break;
                 case "View roles":
                     viewRole();
                     break;
-                case "View employee":
-                    addEmployee();
+                case "View employees":
+                    viewEmployee();
                     break;
                 default:
                     mainMenu();
                     break;
             }
         })
+}
+
+const viewDepartment = () => {
+    connection.query ("SELECT * from department", (err, results) => console.table(results))
+    setTimeout(mainMenu, 5000)
+}
+const viewRole = () => {
+    connection.query ("SELECT * from role", (err, results) => console.table(results))
+    setTimeout(mainMenu, 5000)
+}
+const viewEmployee = () => {
+        connection.query("SELECT first_name, last_name, title, salary FROM employee INNER JOIN role USING (id)", (err, results) =>{ console.table(results) 
+    setTimeout(mainMenu, 2000)
+    })
+    // connection.query ("SELECT * from employee", (err, results) => console.table(results))
+    // setTimeout(mainMenu, 5000)
 }
 
 const updateRoles = () => {
@@ -223,6 +239,3 @@ const mainMenu = () => {
         })
 }
 
-function viewAllEmployees() {
-    console.log("Look at all these employees!");
-}
