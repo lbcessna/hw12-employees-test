@@ -44,9 +44,6 @@ const addDeptRoleEmpData = () => {
                     break;
             }
         })
-    // connection.query("SELECT first_name, last_name, title, salary FROM employee INNER JOIN role USING (id)", (err, results) =>{ console.table(results) 
-    // setTimeout(mainMenu, 2000)
-    // })
 }
 
 const addDepartment = () => {
@@ -166,7 +163,6 @@ const addEmployee = () => {
     })
 };
 const viewDeptRoleEmpData = () => {
-    // connection.query("SELECT first_name, last_name, title, salary FROM employee INNER JOIN role USING (id)", (err, results) => console.table(results))
     inquirer.prompt([
         {
             name: "viewChoice",
@@ -202,10 +198,7 @@ const viewRole = () => {
 const viewEmployee = () => {
         connection.query("SELECT first_name, last_name, title, salary FROM employee INNER JOIN role USING (id)", (err, results) =>{ console.table(results) 
     setTimeout(mainMenu, 2000)
-    })
-    // connection.query ("SELECT * from employee", (err, results) => console.table(results))
-    // setTimeout(mainMenu, 5000)
-}
+    })}
 
 const updateRoles = () => {
     console.log("You selected the updateRoles function");
