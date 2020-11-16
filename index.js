@@ -37,7 +37,7 @@ const addDeptRoleEmpData = () => {
                     addRole();
                     break;
                 case "Add employee":
-                    console.log("Enough people work here already!");
+                    addEmployee();
                     break;
                 default:
                     mainMenu();
@@ -109,8 +109,86 @@ const addRole = () => {
 
     })
 };
+const addEmployee = () => {
+    connection.query("SELECT * FROM employee", (err, results) => {
+        if (err) throw err
+        inquirer.prompt([
+            {
+                name: "first_name",
+                type: "text",
+                message: "Please enter their first name?",
+            },
+            {
+                name: "last_name",
+                type: "text",
+                message: "And their last name?"
+            },
+            {
+                name: "title",
+                type: "rawlist",
+                message: "Please select the employee's title?",
+                choices: function () {
+                    const choicesArray = [];
+                    for (let i = 0; i < results.length; i++) {
+                        choicesArray.push(results[i].title)
+                    }
+                    return choicesArray
+                }
+            },
+            {
+                type: "rawlist",
+                name: "manager",
+                message: "Please select their manager:",
+                choices: function(){
+                    const choicesArray = [];
+                    for(let i=0; i<results.length; i++){
+                        choicesArray.push(results[i].employee)
+                    }
+                    return choicesArray
+                }
+
+            },
+        ]).then(({ title, salary }) => {
+            const [foundTitle] = results.filter(title => title.title)
+            connection.query("INSERT INTO employee SET ?", {
+                department_id: foundDept.id,
+                title: title,
+                salary: salary,
+            }, (err, results) => {
+                if (err) throw err
+                console.log("******************");
+                console.log("New Employee Added!");
+                console.log("******************");
+                setTimeout(mainMenu, 5000)
+            })
+        })
+
+    })
+};
 const viewDeptRoleEmpData = () => {
     connection.query("SELECT first_name, last_name, title, salary FROM employee INNER JOIN role USING (id)", (err, results) => console.table(results))
+    inquirer.prompt([
+        {
+            name: "viewChoice",
+            type: "list",
+            message: "What list would you like to view?",
+            choices: ["View department", "View roles", "View employees"]
+        }]).then(({ addChoice }) => {
+            switch (addChoice) {
+                case "View department":
+                    viewDepartment();
+                    break;
+                case "View roles":
+                    viewRole();
+                    break;
+                case "View employee":
+                    addEmployee();
+                    break;
+                default:
+                    mainMenu();
+                    break;
+            }
+        })
 }
 
 const updateRoles = () => {
